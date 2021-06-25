@@ -1,4 +1,5 @@
 import Facebook from './components/Facebook'
+import Site from './components/Site'
 import {
   useHistory,
   withRouter,
@@ -6,9 +7,12 @@ import {
   Route,
   Redirect
 } from "react-router-dom";
+import React, { useState } from 'react';
 
 function App() {
   let history = useHistory();
+  const [accessToken, setAccessToken] = useState("");
+
   return (
     <div>
       <Route exact path="/">
@@ -17,12 +21,12 @@ function App() {
 
       <Route exact path="/login">
         <div className="App">
-          {<Facebook historyA={history} />}
+          <Facebook historyA={history} setAccessToken={setAccessToken} />
         </div>
       </Route>
 
-      <Route exact path="/about">
-        <h1>About</h1>
+      <Route exact path="/site" >
+        <Site accessToken={accessToken} setAccessToken={setAccessToken} />
       </Route>
     </div >
   );
