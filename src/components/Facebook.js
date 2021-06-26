@@ -33,6 +33,7 @@ class Facebook extends Component {
       fbContent = (<FacebookLogin
         appId="56833887771"
         autoLoad={true}
+        scope="ads_management,ads_read,leads_retrieval,pages_manage_ads"
         fields="name,email,picture"
         onClick={this.componentClicked}
         callback={this.responseFacebook}

@@ -3,7 +3,6 @@ import Site from './components/Site'
 import {
   useHistory,
   withRouter,
-  BrowserRouter as Router,
   Route,
   Redirect
 } from "react-router-dom";
