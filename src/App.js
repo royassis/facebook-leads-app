@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 
 function App() {
   let history = useHistory();
-  const [accessToken, setAccessToken] = useState("");
+  const [facebookResponse, setFacebookResponse] = useState({});
 
   return (
     <div>
@@ -20,12 +20,12 @@ function App() {
 
       <Route exact path="/login">
         <div className="App">
-          <Facebook historyA={history} setAccessToken={setAccessToken} />
+          <Facebook historyA={history} setFacebookResponse={setFacebookResponse} />
         </div>
       </Route>
 
       <Route exact path="/site" >
-        <Site accessToken={accessToken} setAccessToken={setAccessToken} />
+        <Site facebookResponse={facebookResponse} />
       </Route>
     </div >
   );

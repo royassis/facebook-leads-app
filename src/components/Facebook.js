@@ -18,7 +18,7 @@ class Facebook extends Component {
     console.log("im clicked");
   }
   responseFacebook(response) {
-    this.props.setAccessToken(response.accessToken);
+    this.props.setFacebookResponse(response);
     this.props.historyA.push("/site");
   }
 
@@ -33,8 +33,8 @@ class Facebook extends Component {
       fbContent = (<FacebookLogin
         appId="56833887771"
         autoLoad={true}
-        scope="ads_management,ads_read,leads_retrieval,pages_manage_ads"
-        fields="name,email,picture"
+        scope="public_profile,ads_management,ads_read,leads_retrieval,pages_manage_ads,pages_show_list"
+        fields="id,name,email,picture,adaccounts"
         onClick={this.componentClicked}
         callback={this.responseFacebook}
       />);

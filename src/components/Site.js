@@ -3,14 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 
 export default function Site(props){
-    console.log("response from login page: " + props.accessToken);
+    console.log("response from login page: " + props.facebookResponse);
 
     const [htmlTable, setHtmlTable] = useState({});
     const [nRows, setNRows] = useState(0);
 
     useEffect(() => {
         async function foo () {
-            const response = await fetch(`/get_data?access_token=${props.accessToken}`);
+            const response = await fetch(`/get_data?access_token=${props.facebookResponse.accessToken}`);
             const dict = await response.json();
             console.log(dict);
             let dictb = {};
@@ -18,7 +18,6 @@ export default function Site(props){
             let nRows = Math.max(...Object.keys(dictb).map(key => dictb[key].length))
             setHtmlTable(dictb);
             setNRows(nRows);
-            
          }
          foo();
       }, []);
@@ -28,7 +27,8 @@ export default function Site(props){
     return(
         
         <div> 
-            <h1>{props.accessToken}</h1> 
+            <h1>Hey {props.facebookResponse}</h1>
+            <p>{props.facebookResponse.accessToken}</p> 
             <Table striped bordered hover>
                 <thead>
                     <tr>{Object.keys(htmlTable).map((x, i) =>{return <td key = {i}>{x}</td>;})}</tr>
