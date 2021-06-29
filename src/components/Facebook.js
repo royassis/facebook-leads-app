@@ -1,46 +1,43 @@
-import React, { Component } from 'react';
-import FacebookLogin from 'react-facebook-login';
-
+import React, { Component  } from 'react';
 
 class Facebook extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoggedIn: false,
       userId: '',
       name: '',
       email: '',
       picture: ''
     };
+    this.setLoginResponse = this.props.setLoginResponse.bind(this);
   }
 
-  componentClicked() {
+  responseFacebook() {
     console.log("im clicked");
-  }
-  responseFacebook(response) {
-    this.props.setFacebookResponse(response);
     this.props.historyA.push("/site");
   }
 
   render() {
-    this.componentClicked = this.componentClicked.bind(this);
     this.responseFacebook = this.responseFacebook.bind(this);
-    let fbContent;
 
-    if (this.state.isLoggedIn) {
-      fbContent = null;
-    } else {
-      fbContent = (<FacebookLogin
-        appId="56833887771"
-        autoLoad={true}
-        scope="public_profile,ads_management,ads_read,leads_retrieval,pages_manage_ads,pages_show_list"
-        fields="id,name,email,picture,adaccounts"
-        onClick={this.componentClicked}
-        callback={this.responseFacebook}
-      />);
+    window.onLoad = () => {
+      window.FB.getLoginStatus(function(response) {
+        this.setLoginResponse(response);
+      }.bind(this));
     }
 
-    return (<div>{fbContent}</div>)
+
+    return (
+    <div 
+      className="fb-login-button" 
+      data-width="" 
+      data-size="large" 
+      data-button-type="continue_with" 
+      data-layout="default" 
+      data-use-continue-as="false"
+      data-auto-logout-link="true"
+      data-onlogin = "onLoad">
+    </div>)
   }
 
 }

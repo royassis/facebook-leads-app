@@ -3,14 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
 
 export default function Site(props){
-    console.log("response from login page: " + props.facebookResponse);
 
     const [htmlTable, setHtmlTable] = useState({});
     const [nRows, setNRows] = useState(0);
 
     useEffect(() => {
         async function foo () {
-            const response = await fetch(`/get_data?access_token=${props.facebookResponse.accessToken}`);
+            const response = await fetch(`/get_data?access_token=${props.loginResponse.accessToken}`);
             const dict = await response.json();
             console.log(dict);
             let dictb = {};
@@ -20,15 +19,14 @@ export default function Site(props){
             setNRows(nRows);
          }
          foo();
-      }, []);
+      }, [props.loginResponse.accessToken]);
       
     const rows = new Array(nRows).fill(0).map((r, i) => Object.values(htmlTable).map(arr_ => <td>{arr_[i]}</td>))
 
     return(
         
         <div> 
-            <h1>Hey {props.facebookResponse}</h1>
-            <p>{props.facebookResponse.accessToken}</p> 
+            <h1>Hey</h1>
             <Table striped bordered hover>
                 <thead>
                     <tr>{Object.keys(htmlTable).map((x, i) =>{return <td key = {i}>{x}</td>;})}</tr>
