@@ -3,40 +3,31 @@ import React, { Component  } from 'react';
 class Facebook extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      userId: '',
-      name: '',
-      email: '',
-      picture: ''
-    };
-    this.setLoginResponse = this.props.setLoginResponse.bind(this);
-  }
-
-  responseFacebook() {
-    console.log("im clicked");
-    this.props.historyA.push("/site");
+    this.state = {};
   }
 
   render() {
-    this.responseFacebook = this.responseFacebook.bind(this);
 
-    window.onLoad = () => {
-      window.FB.getLoginStatus(function(response) {
-        this.setLoginResponse(response);
-      }.bind(this));
-    }
-
+    (function (d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) { return; }
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));  
 
     return (
-    <div 
+    <div>
+      <div 
       className="fb-login-button" 
       data-width="" 
       data-size="large" 
       data-button-type="continue_with" 
       data-layout="default" 
       data-use-continue-as="false"
-      data-auto-logout-link="true"
-      data-onlogin = "onLoad">
+      data-auto-logout-link="true">
+    </div>
+    <h1>{process.env.REACT_APP_FACEBOOK_APP_IDs}</h1>
     </div>)
   }
 
