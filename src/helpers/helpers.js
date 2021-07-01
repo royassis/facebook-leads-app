@@ -26,7 +26,7 @@ export function initFacebookSdk() {
             // auto authenticate with the api if already logged in with facebook
             window.FB.getLoginStatus(({ authResponse }) => {
                 if (authResponse) {
-                    console.log("authenticated");
+                    apiAuthenticate(authResponse.accessToken).then(resolve);
                 } else {
                     resolve();
                 }
