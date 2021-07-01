@@ -1,4 +1,16 @@
+import axios from 'axios';
+
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
+const baseUrl = `${process.env.REACT_APP_API_URL}/accounts`;
+
+async function apiAuthenticate(accessToken) {
+    // authenticate with the api using a facebook access token,
+    // on success the api returns an account object with a JWT auth token
+    const response = await axios.post(`${baseUrl}/authenticate`, { accessToken });
+    const account = response.data;
+    return account;
+}
+
 
 export function initFacebookSdk() {
     return new Promise(resolve => {
@@ -8,7 +20,7 @@ export function initFacebookSdk() {
                 appId: facebookAppId,
                 cookie: true,
                 xfbml: true,
-                version: 'v8.0'
+                version: 'v11.0'
             });
 
             // auto authenticate with the api if already logged in with facebook
