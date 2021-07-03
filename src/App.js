@@ -5,20 +5,26 @@ import {
   withRouter,
 } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
-import {initFacebookSdk} from './helpers/helpers'
 
 require('dotenv').config();
 
-initFacebookSdk().then(App);
 
-function App() {
+function App(props) {
   let history = useHistory();
-  const [loginResponse, setLoginResponse] = useState("");
+
+  var loginResponse_ = "";
+
+  window.FB.getLoginStatus((authResponse) => {
+    console.log(authResponse);
+    loginResponse_ = authResponse;
+  });
+
+  const [loginResponse, setLoginResponse] = useState(loginResponse_);
   
   return (
       <div className="App">
         <Facebook historyA={history}  setLoginResponse={setLoginResponse}/>
-        {/* {loginResponse.status === "connected" && <Site loginResponse={loginResponse} />} */}
+        {loginResponse.status === "connected" && <Site loginResponse={loginResponse} />}
       </div>
   );
 }
