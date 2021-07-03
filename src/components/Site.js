@@ -10,8 +10,8 @@ export default function Site(props){
     const [thisAccount, setThisAccount] = useState("");
 
 
-    async function getLeads (pageAccessToken, adAccountId) {
-        const response = await fetch(`/get_data?access_token=${pageAccessToken}&account_id=${adAccountId}`);
+    async function fetchLeads (pageAccessToken, adAccountId) {
+        const response = await fetch(`/fixtures?access_token=${pageAccessToken}&account_id=${adAccountId}`);
         const dict = await response.json();
         console.log(dict);
         let dictb = {};
@@ -28,7 +28,7 @@ export default function Site(props){
             if (response && response.data && response.data[0] &&response.data[0].access_token){
                 response.data.map(x =>console.log(x.name, x.id))
                 console.log(response.data[0].access_token)
-                getLeads(response.data[0].access_token, adAccountData.id)
+                fetchLeads(response.data[0].access_token, adAccountData.id)
             }else{
                 setHtmlTable({});
             }

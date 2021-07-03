@@ -25,7 +25,7 @@ class Facebook extends Component {
         data-layout="default" 
         data-use-continue-as="true"
         data-auto-logout-link="true"
-        data-scope="public_profile,pages_show_list"
+        data-scope="public_profile,pages_show_list,leads_retrieval,pages_manage_ads,pages_read_engagement,ads_management"
         data-onlogin = "foo">
       </div>)
   }

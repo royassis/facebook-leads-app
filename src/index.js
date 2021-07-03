@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
+
 (function (d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) { return; }
@@ -18,7 +20,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 window.fbAsyncInit = function () {
   window.FB.init({
-      appId: "56833887771",
+      appId: facebookAppId,
       cookie: true,
       xfbml: true,
       version: 'v11.0'
