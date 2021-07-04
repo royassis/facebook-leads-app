@@ -11,7 +11,7 @@ export default function Site(props){
 
 
     async function fetchLeads (pageAccessToken, adAccountId) {
-        const response = await fetch(`/fixtures?access_token=${pageAccessToken}&account_id=${adAccountId}`);
+        const response = await fetch(`http://localhost:5000/leads?access_token=${pageAccessToken}&account_id=${adAccountId}`);
         const dict = await response.json();
         console.log(dict);
         let dictb = {};
