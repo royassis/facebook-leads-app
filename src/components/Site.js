@@ -4,21 +4,15 @@ import { Table } from 'react-bootstrap';
 
 export default function Site(props){
 
-    const [htmlTable, setHtmlTable] = useState({});
-    const [nRows, setNRows] = useState(0);
+    const [leadData, setLeadData] = useState([]);
     const [accountIds, setAccountIds] = useState("");
     const [thisAccount, setThisAccount] = useState("");
 
-
     async function fetchLeads (pageAccessToken, adAccountId) {
         const response = await fetch(`http://localhost:5000/leads?access_token=${pageAccessToken}&account_id=${adAccountId}`);
-        const dict = await response.json();
-        console.log(dict);
-        let dictb = {};
-        Object.keys(dict).forEach(key => dictb[key] = Object.values(dict[key]));
-        let nRows = Math.max(...Object.keys(dictb).map(key => dictb[key].length))
-        setHtmlTable(dictb);
-        setNRows(nRows);
+        const leadData = await response.json();
+        console.log(leadData);
+        setLeadData(leadData);
      }
 
     const getPromotedPages = function (adAccountData){
@@ -30,7 +24,7 @@ export default function Site(props){
                 console.log(response.data[0].access_token)
                 fetchLeads(response.data[0].access_token, adAccountData.id)
             }else{
-                setHtmlTable({});
+                setLeadData([]);
             }
         })
     };
@@ -51,8 +45,6 @@ export default function Site(props){
          
       }, [props.loginResponse.accessToken]);
       
-    const rows = new Array(nRows).fill(0).map((r, i) => Object.values(htmlTable).map(arr_ => <td>{arr_[i]}</td>))
-
 
     return(
         
@@ -62,10 +54,19 @@ export default function Site(props){
             {thisAccount && <h1>Account {thisAccount} pages</h1>}
             <Table striped bordered hover>
                 <thead>
-                    <tr>{Object.keys(htmlTable).map((x, i) =>{return <td key = {i}>{x}</td>;})}</tr>
+                    <tr>
+                        {leadData.length>0 && Object.keys(leadData[0]).map(
+                            (colname, i) => <td key={i}>{colname}</td>
+                        )}
+                    </tr>
                 </thead>   
                 <tbody>
-                    {rows.map(row => <tr>{row}</tr>)}
+                    {leadData.length>0 && leadData.map(
+                        (lead, i)=>(
+                            <tr key={i}>{Object.values(lead).map(
+                                (field, j)=><td key={j}>{field}</td>)}
+                            </tr>)
+                        )}
                 </tbody>   
                 
             </Table>
