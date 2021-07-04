@@ -3,11 +3,22 @@
     {  
       "created":"2021-06-21 05:35:14+00:00",
       "company_name":"Niloosoft Israel",
-      "email":"liorbd@horizonssoft.com",
-      "full_name":"Lior BD",
-      "phone_number":"0505691063",
+      "email":"libd@hoft.com",
+      "full_name":"BD",
+      "phone_number":"0505691",
       "platform":"fb",
-      "source":"BITCOINE"
+      "source":"BITCOINE",
+      "className":"a"
+    },
+    {  
+      "created":"2021-06-21 05:35:14+00:00",
+      "company_name":"Niloosoft Israel",
+      "email":"li@horift.com",
+      "full_name":"Li",
+      "phone_number":"0505691",
+      "platform":"fb",
+      "source":"BITCOINE",
+      "className":"a"
     }
   ]
 }

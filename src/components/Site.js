@@ -45,6 +45,12 @@ export default function Site(props){
          
       }, [props.loginResponse.accessToken]);
       
+    function setRow(i){
+        leadData[i].className="b";
+        console.log(leadData[i]);
+        setLeadData(leadData);
+    }
+
 
     return(
         
@@ -54,17 +60,20 @@ export default function Site(props){
             {thisAccount && <h1>Account {thisAccount} pages</h1>}
             <Table striped bordered hover>
                 <thead>
-                    <tr>
-                        {leadData.length>0 && Object.keys(leadData[0]).map(
-                            (colname, i) => <td key={i}>{colname}</td>
-                        )}
-                    </tr>
+                    {leadData.length>0 && 
+                        <tr>
+                            {Object.keys(leadData[0]).filter(x => x != "className").map(
+                                (colname, i) => <td key={i}>{colname}</td>
+                            )}
+                        </tr>}
                 </thead>   
                 <tbody>
                     {leadData.length>0 && leadData.map(
                         (lead, i)=>(
-                            <tr key={i}>{Object.values(lead).map(
-                                (field, j)=><td key={j}>{field}</td>)}
+                            <tr 
+                                className = {lead.className} 
+                                onClick = {()=>setRow(i)} key={i}>
+                                    {Object.values(lead).map((field, j)=><td key={j}>{field}</td>)}
                             </tr>)
                         )}
                 </tbody>   
