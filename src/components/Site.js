@@ -46,14 +46,14 @@ export default function Site(props) {
     }, [props.loginResponse.accessToken]);
 
     function setRow(i) {
-        let leadData_ = leadData;
+        let leadData_ = [...leadData];
         leadData_[i].marked = !leadData[i].marked;
         setLeadData(leadData_);
         console.log(leadData_[i]);
     }
 
     function filterFields(row) {
-        const allowed = ['created', 'company_name', 'email', 'full_name', 'phone_number', 'platform', 'source'];
+        const allowed = ['created', 'company_name', 'email', 'full_name', 'phone_number', 'platform', 'source', 'comments'];
 
         return Object.keys(row)
             .filter(key => allowed.includes(key))
@@ -82,7 +82,7 @@ export default function Site(props) {
                 <tbody>
                     {leadData.length > 0 && leadData.map(
                         (lead, i) => (
-                            <tr className={lead.marked ? 1 : 0}
+                            <tr className={lead.marked ? "plainRow" : "markedRow"}
                                 onClick={() => setRow(i)} key={i}>
                                 {Object.values(filterFields(lead)).map((field, j) => <td key={j}>{field}</td>)}
                             </tr>)

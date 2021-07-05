@@ -36,3 +36,14 @@
     transform: rotate(360deg);
   }
 }
+
+plainRow{
+  background-color: #282c34;
+}
+
+markedRow{
+  background-color: #35d176;
+}
+
+
+

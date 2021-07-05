@@ -8,7 +8,8 @@
       "phone_number":"0505691",
       "platform":"fb",
       "source":"BITCOINE",
-      "marked":false
+      "marked":false,
+      "comments":""
     },
     {  
       "created":"2021-06-21 05:35:14+00:00",
@@ -18,7 +19,8 @@
       "phone_number":"0505691",
       "platform":"fb",
       "source":"BITCOINE",
-      "marked":false
+      "marked":false,
+      "comments":""
     }
   ]
 }
