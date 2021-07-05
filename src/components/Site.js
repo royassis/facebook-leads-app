@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
+import Styles from '../App.css'
 
 export default function Site(props) {
 
@@ -45,11 +46,19 @@ export default function Site(props) {
 
     }, [props.loginResponse.accessToken]);
 
-    function setRow(i) {
+    async function setRow(leadid, i) {
         let leadData_ = [...leadData];
-        leadData_[i].marked = !leadData[i].marked;
+        leadData_[i].marked = !leadData_[i].marked;
         setLeadData(leadData_);
-        console.log(leadData_[i]);
+
+        const res = await fetch(`http://localhost:5000/leads/${leadid}`, {
+        method: 'PUT',
+        headers: {
+            'Content-type': 'application/json',
+        },
+        body: JSON.stringify(leadData_[i]),
+        })
+        
     }
 
     function filterFields(row) {
@@ -62,6 +71,10 @@ export default function Site(props) {
                 return obj;
             }, {});
 
+    }
+
+    function formatTableData(data){
+        Object.entries(data).forEach(()=>{})
     }
 
     return (
@@ -82,8 +95,8 @@ export default function Site(props) {
                 <tbody>
                     {leadData.length > 0 && leadData.map(
                         (lead, i) => (
-                            <tr className={lead.marked ? "plainRow" : "markedRow"}
-                                onClick={() => setRow(i)} key={i}>
+                            <tr className={lead.marked ? "PlainRow" : "MarkedRow"}
+                                onClick={() => setRow(lead.id, i)} key={lead.id}>
                                 {Object.values(filterFields(lead)).map((field, j) => <td key={j}>{field}</td>)}
                             </tr>)
                     )}

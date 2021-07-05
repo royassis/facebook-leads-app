@@ -37,11 +37,11 @@
   }
 }
 
-plainRow{
+.PlainRow{
   background-color: #282c34;
 }
 
-markedRow{
+.MarkedRow{ 
   background-color: #35d176;
 }
 
