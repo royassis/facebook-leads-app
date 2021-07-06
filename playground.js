@@ -28,16 +28,21 @@ rows = [
 
 function setRowEle(rowEele){
   if (rowEele == rowEele){
-    return rowEele
+    return <td>{rowEele}</td>
+  } else  (rowEele == "comments"){
+    return <td><button>{rowEele}</button></td>
   }
+  
 }
 
-function setRow(row){
-  return Object.entries(row).filter(rowEele => rowEele[0]!== "marked").map(rowEele => setRowEle(rowEele))
+function setRow(i, row){
+  return <tr onclick = {i, row.id} className ={row.marked ? Style.1 : Style.2}>
+            Object.entries(row).filter(rowEele => rowEele[0]!== "marked").map(rowEele => setRowEle(rowEele))
+          </tr>
 }
 
 function setRows(rows){
-  return rows.map(row => setRow(row))
+  return rows.map((i, row) => setRow(i, row))
 }
 
 
