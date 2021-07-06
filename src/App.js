@@ -4,7 +4,7 @@ import {
   useHistory,
   withRouter,
 } from "react-router-dom";
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 require('dotenv').config();
 

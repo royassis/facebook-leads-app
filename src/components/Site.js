@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { Table } from 'react-bootstrap';
-import Styles from '../App.css'
 
 export default function Site(props) {
 
@@ -16,21 +15,21 @@ export default function Site(props) {
         setLeadData(leadData_);
     }
 
-    const getLeads = function (adAccountData) {
-        window.FB.api(`${adAccountData.id}/promote_pages?fields=access_token`, function (response) {
-            console.log("getLeads");
-            console.log(response)
-            if (response && response.data && response.data[0] && response.data[0].access_token) {
-                response.data.map(x => console.log(x.name, x.id))
-                console.log(response.data[0].access_token)
-                fetchLeads(response.data[0].access_token, adAccountData.id)
-            } else {
-                setLeadData([]);
-            }
-        })
-    };
-
     useEffect(() => {
+        function getLeads(adAccountData) {
+            window.FB.api(`${adAccountData.id}/promote_pages?fields=access_token`, function (response) {
+                console.log("getLeads");
+                console.log(response)
+                if (response && response.data && response.data[0] && response.data[0].access_token) {
+                    response.data.map(x => console.log(x.name, x.id))
+                    console.log(response.data[0].access_token)
+                    fetchLeads(response.data[0].access_token, adAccountData.id)
+                } else {
+                    setLeadData([]);
+                }
+            })
+        };
+
         window.FB.api('me/adaccounts', function (response) {
             console.log(response);
             if (response.data) {
@@ -51,31 +50,35 @@ export default function Site(props) {
         leadData_[i].marked = !leadData_[i].marked;
         setLeadData(leadData_);
 
-        const res = await fetch(`http://localhost:5000/leads/${leadid}`, {
-        method: 'PUT',
-        headers: {
-            'Content-type': 'application/json',
-        },
-        body: JSON.stringify(leadData_[i]),
+        await fetch(`http://localhost:5000/leads/${leadid}`, {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(leadData_[i]),
         })
-        
     }
 
-    function filterFields(row) {
-        const allowed = ['created', 'company_name', 'email', 'full_name', 'phone_number', 'platform', 'source', 'comments'];
-
-        return Object.keys(row)
-            .filter(key => allowed.includes(key))
-            .reduce((obj, key) => {
-                obj[key] = row[key];
-                return obj;
-            }, {});
+    function formatRowEle(rowEele, j) {
+        var someval = rowEele[1];
+        if (rowEele[0] === "comments") {
+            return <td key={j}><input type="text" value ={someval} onChange = {()=>console.log("changed")}></input></td>
+        } else {
+            return <td key={j}>{rowEele[1]}</td>
+        }
 
     }
 
-    function formatTableData(data){
-        Object.entries(data).forEach(()=>{})
+    function formatRow(row, i) {
+        return <tr key={i} onClick={() => setRow(i, row.id)} className={row.marked ? "PlainRow" : "MarkedRow"}>
+            {Object.entries(row).filter(rowEele => rowEele[0] !== "marked").map((rowEele, j) => formatRowEle(rowEele, j))}
+        </tr>
     }
+
+    function formatRows(rows) {
+        return rows.map((row, i) => formatRow(row, i))
+    }
+
 
     return (
 
@@ -87,19 +90,13 @@ export default function Site(props) {
                 <thead>
                     {leadData.length > 0 &&
                         <tr>
-                            {Object.keys(leadData[0]).filter(x => x != "marked").map(
+                            {Object.keys(leadData[0]).filter(x => x !== "marked").map(
                                 (colname, i) => <td key={i}>{colname}</td>
                             )}
                         </tr>}
                 </thead>
                 <tbody>
-                    {leadData.length > 0 && leadData.map(
-                        (lead, i) => (
-                            <tr className={lead.marked ? "PlainRow" : "MarkedRow"}
-                                onClick={() => setRow(lead.id, i)} key={lead.id}>
-                                {Object.values(filterFields(lead)).map((field, j) => <td key={j}>{field}</td>)}
-                            </tr>)
-                    )}
+                    {leadData.length > 0 && formatRows(leadData)}
                 </tbody>
 
             </Table>
