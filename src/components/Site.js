@@ -45,45 +45,55 @@ export default function Site(props) {
 
     }, [props.loginResponse.accessToken]);
 
-    async function setRow(leadid, i) {
+    async function setRow(rowId) {
         let leadData_ = [...leadData];
-        leadData_[i].marked = !leadData_[i].marked;
+        let newRow = leadData_.filter(row=> row.id === rowId)[0]
+        newRow.marked = !newRow.marked;
         setLeadData(leadData_);
 
-        await fetch(`http://localhost:5000/leads/${leadid}`, {
+        await fetch(`http://localhost:5000/leads/${rowId}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json',
             },
-            body: JSON.stringify(leadData_[i]),
+            body: JSON.stringify(newRow),
         })
     }
 
-    async function updateInputField(e, row_idx) {
-        console.log(e.target.value);
+    async function updateInputField(e, rowId) {
         let leadData_ = [...leadData];
-        leadData_[row_idx].comments = e.target.value
+        let newRow = leadData_.filter(row=> row.id === rowId)[0]
+        newRow.comments = e.target.value
         setLeadData(leadData_);
+
+        console.log(newRow)
+
+        await fetch(`http://localhost:5000/leads/${rowId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify(newRow),
+        })
     }    
 
-    function formatRowEle(rowEele, ele_idx, row_idx) {
-        var someval = rowEele[1];
-        if (rowEele[0] === "comments") {
-            return <td key={ele_idx}><input type="text" value ={someval} onChange ={(e, key)=>updateInputField(e, row_idx)}></input></td>
-        } else {
-            return <td key={ele_idx}>{rowEele[1]}</td>
+    function formatRowEle(rowEle, eleIdx, rowId) {
+        if (rowEle[0] === "comments") {
+            return <td key={rowEle[0]}><input type="text" value ={rowEle[1]} onChange ={(e, key)=>updateInputField(e, rowId)}></input></td>
+        } 
+        else {
+            return <td key={eleIdx}>{rowEle[1]}</td>
         }
-
     }
 
-    function formatRow(row, row_idx) {
-        return <tr key={row_idx} onClick={() => setRow(row_idx, row.id)} className={row.marked ? "PlainRow" : "MarkedRow"}>
-            {Object.entries(row).filter(rowEele => rowEele[0] !== "marked").map((rowEele, ele_idx) => formatRowEle(rowEele, ele_idx, row_idx))}
+    function formatRow(row) {
+        return <tr key={row.id} onClick={() => setRow(row.id)} className={row.marked ? "PlainRow" : "MarkedRow"}>
+            {Object.entries(row).filter(rowEle => rowEle[0] !== "marked").map((rowEle, eleIdx) => formatRowEle(rowEle, eleIdx, row.id))}
         </tr>
     }
 
     function formatRows(rows) {
-        return rows.map((row, row_idx) => formatRow(row, row_idx))
+        return rows.map((row) => formatRow(row))
     }
 
 

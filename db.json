@@ -10,19 +10,19 @@
       "platform": "fb",
       "source": "BITCOINE",
       "marked": true,
-      "comments": "asd"
+      "comments": "asdasdsssasd"
     },
     {
       "id": 2,
       "created": "2021-06-21 05:35:14+00:00",
       "company_name": "Niloosoft Israel",
-      "email": "li@horift.com",
-      "full_name": "Li",
+      "email": "libd@hoft.com",
+      "full_name": "BD",
       "phone_number": "0505691",
       "platform": "fb",
       "source": "BITCOINE",
-      "marked": false,
-      "comments": ""
+      "marked": true,
+      "comments": "asdas"
     }
   ]
 }
