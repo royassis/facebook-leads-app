@@ -66,8 +66,6 @@ export default function Site(props) {
         newRow.comments = e.target.value
         setLeadData(leadData_);
 
-        console.log(newRow)
-
         await fetch(`http://localhost:5000/leads/${rowId}`, {
             method: 'PUT',
             headers: {
