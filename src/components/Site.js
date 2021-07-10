@@ -7,6 +7,7 @@ export default function Site(props) {
     const [leadData, setLeadData] = useState([]);
     const [accountIds, setAccountIds] = useState("");
     const [thisAccount, setThisAccount] = useState("");
+    const keysToFilter = ["marked"];
 
     async function fetchLeads(pageAccessToken, adAccountId) {
         const response = await fetch(`http://localhost:5000/leads?access_token=${pageAccessToken}&account_id=${adAccountId}`);
@@ -47,7 +48,7 @@ export default function Site(props) {
 
     async function setRow(rowId) {
         let leadData_ = [...leadData];
-        let newRow = leadData_.filter(row=> row.id === rowId)[0]
+        let newRow = leadData_.filter(row => row.id === rowId)[0]
         newRow.marked = !newRow.marked;
         setLeadData(leadData_);
 
@@ -60,11 +61,16 @@ export default function Site(props) {
         })
     }
 
-    async function updateInputField(e, rowId) {
+    async function inputFieldOnChange(e, rowId) {
+        e.preventDefault();
+
         let leadData_ = [...leadData];
-        let newRow = leadData_.filter(row=> row.id === rowId)[0]
+        let newRow = leadData_.filter(row => row.id === rowId)[0]
+   
         newRow.comments = e.target.value
         setLeadData(leadData_);
+
+        console.log(newRow);
 
         await fetch(`http://localhost:5000/leads/${rowId}`, {
             method: 'PUT',
@@ -73,21 +79,32 @@ export default function Site(props) {
             },
             body: JSON.stringify(newRow),
         })
-    }    
+
+    }
 
     function formatRowEle(rowEle, eleIdx, rowId) {
         if (rowEle[0] === "comments") {
-            return <td key={rowEle[0]}><input type="text" value ={rowEle[1]} onChange ={(e, key)=>updateInputField(e, rowId)}></input></td>
-        } 
+            return <td key={eleIdx}>
+                        <input
+                            type="text"
+                            value={rowEle[1]}
+                            onChange={(e) => inputFieldOnChange(e, rowId)}>
+                        </input>
+                    </td>
+        }
         else {
             return <td key={eleIdx}>{rowEle[1]}</td>
         }
     }
 
     function formatRow(row) {
-        return <tr key={row.id} onClick={() => setRow(row.id)} className={row.marked ? "PlainRow" : "MarkedRow"}>
-            {Object.entries(row).filter(rowEle => rowEle[0] !== "marked").map((rowEle, eleIdx) => formatRowEle(rowEle, eleIdx, row.id))}
-        </tr>
+        return <tr
+                    key={row.id}
+                    onDoubleClick={() => setRow(row.id)}
+                    className={row.marked ? "PlainRow" : "MarkedRow"}
+                >
+                    {Object.entries(row).filter(rowEle => !keysToFilter.includes(rowEle[0])).map((rowEle, eleIdx) => formatRowEle(rowEle, eleIdx, row.id))}
+                </tr>
     }
 
     function formatRows(rows) {
@@ -105,7 +122,7 @@ export default function Site(props) {
                 <thead>
                     {leadData.length > 0 &&
                         <tr>
-                            {Object.keys(leadData[0]).filter(x => x !== "marked").map(
+                            {Object.keys(leadData[0]).filter(x => !keysToFilter.includes(x)).map(
                                 (colname, i) => <td key={i}>{colname}</td>
                             )}
                         </tr>}
