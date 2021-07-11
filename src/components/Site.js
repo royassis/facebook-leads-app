@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef} from 'react';
 import { Table } from 'react-bootstrap';
 
 export default function Site(props) {
@@ -7,6 +7,7 @@ export default function Site(props) {
     const [leadData, setLeadData] = useState([]);
     const [accountIds, setAccountIds] = useState("");
     const [thisAccount, setThisAccount] = useState("");
+    const wrapperRef = useRef(null);
     const keysToFilter = ["marked"];
 
     async function fetchLeads(pageAccessToken, adAccountId) {
@@ -31,6 +32,7 @@ export default function Site(props) {
             })
         };
 
+        document.addEventListener('mousedown', ()=>console.log(wrapperRef));
         window.FB.api('me/adaccounts', function (response) {
             console.log(response);
             if (response.data) {
@@ -83,9 +85,12 @@ export default function Site(props) {
     }
 
     function formatRowEle(rowEle, eleIdx, rowId) {
+        eleIdx = parseInt(eleIdx);
         if (rowEle[0] === "comments") {
             return <td key={eleIdx}>
                         <input
+                            id ={rowId}
+                            ref={wrapperRef}
                             type="text"
                             value={rowEle[1]}
                             onChange={(e) => inputFieldOnChange(e, rowId)}>
