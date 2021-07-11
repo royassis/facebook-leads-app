@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef} from 'react';
+import React, { useState, useEffect, createRef} from 'react';
 import { Table } from 'react-bootstrap';
 
 export default function Site(props) {
@@ -7,8 +7,12 @@ export default function Site(props) {
     const [leadData, setLeadData] = useState([]);
     const [accountIds, setAccountIds] = useState("");
     const [thisAccount, setThisAccount] = useState("");
-    const wrapperRef = useRef(null);
+    const [currentRow, setCurrentRow] = useState(0);
+    const [elRefs, setElRefs] = useState([]);    
+
+
     const keysToFilter = ["marked"];
+
 
     async function fetchLeads(pageAccessToken, adAccountId) {
         const response = await fetch(`http://localhost:5000/leads?access_token=${pageAccessToken}&account_id=${adAccountId}`);
@@ -32,7 +36,6 @@ export default function Site(props) {
             })
         };
 
-        document.addEventListener('mousedown', ()=>console.log(wrapperRef));
         window.FB.api('me/adaccounts', function (response) {
             console.log(response);
             if (response.data) {
@@ -46,7 +49,19 @@ export default function Site(props) {
             }
         })
 
-    }, [props.loginResponse.accessToken]);
+        setElRefs(__ => (
+            Array(leadData.length).fill().map((_, i) => elRefs[i] || createRef())
+          ));
+
+        function handleClickOutside(event) {
+            if (elRefs[currentRow] && !elRefs[currentRow].current.contains(event.target)) {
+                alert('You clicked outside of me!');
+            }
+        }
+
+        document.addEventListener('mousedown', (e)=>handleClickOutside(e));
+
+    }, [props.loginResponse.accessToken, currentRow]);
 
     async function setRow(rowId) {
         let leadData_ = [...leadData];
@@ -90,9 +105,10 @@ export default function Site(props) {
             return <td key={eleIdx}>
                         <input
                             id ={rowId}
-                            ref={wrapperRef}
+                            ref={elRefs[eleIdx]}
                             type="text"
                             value={rowEle[1]}
+                            onClick = {()=>setCurrentRow(eleIdx)}
                             onChange={(e) => inputFieldOnChange(e, rowId)}>
                         </input>
                     </td>
