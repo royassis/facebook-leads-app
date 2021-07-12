@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, createRef} from 'react';
 import { Table } from 'react-bootstrap';
-import Styles from '../App.css';
+import '../App.css';
 
 export default function Site(props) {
 
@@ -53,7 +53,7 @@ export default function Site(props) {
                     </button>))
             }
         })
-    }, [props.loginResponse.accessToken, elRefs]);
+    }, [props.loginResponse.accessToken, elRefs, backendUrl]);
 
 
     function useOutsideAlerter() {
