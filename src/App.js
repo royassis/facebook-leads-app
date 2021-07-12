@@ -1,21 +1,20 @@
 import FacebookLoginButton from './components/FacebookLoginButton'
 import Site from './components/Site'
 import {withRouter,} from "react-router-dom";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 require('dotenv').config();
 
 
 function App(props) {
 
-  var loginResponse_ = "";
+  const [loginResponse, setLoginResponse] = useState("");
 
+  useEffect(() => {
   window.FB.getLoginStatus((authResponse) => {
     console.log(authResponse);
-    loginResponse_ = authResponse;
-  });
-
-  const [loginResponse, setLoginResponse] = useState(loginResponse_);
+    setLoginResponse(authResponse);
+  })}, []);
   
   return (
       <div className="App">
