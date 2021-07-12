@@ -1,16 +1,12 @@
-import Facebook from './components/Facebook'
+import FacebookLoginButton from './components/FacebookLoginButton'
 import Site from './components/Site'
-import {
-  useHistory,
-  withRouter,
-} from "react-router-dom";
+import {withRouter,} from "react-router-dom";
 import React, { useState } from 'react';
 
 require('dotenv').config();
 
 
 function App(props) {
-  let history = useHistory();
 
   var loginResponse_ = "";
 
@@ -23,7 +19,7 @@ function App(props) {
   
   return (
       <div className="App">
-        <Facebook historyA={history}  setLoginResponse={setLoginResponse}/>
+        <FacebookLoginButton setLoginResponse={setLoginResponse}/>
         {loginResponse.status === "connected" && <Site loginResponse={loginResponse} />}
       </div>
   );

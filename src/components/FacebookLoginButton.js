@@ -1,7 +1,7 @@
  import React, { Component  } from 'react';
 
 
-class Facebook extends Component {
+class FacebookLoginButton extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -31,4 +31,4 @@ class Facebook extends Component {
   }
 }
 
-export default Facebook;
+export default FacebookLoginButton;

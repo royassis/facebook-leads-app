@@ -12,16 +12,18 @@ export default function Site(props) {
 
     const keysToFilter = ["marked"];
 
-
-    async function fetchLeads(pageAccessToken, adAccountId) {
-        const response = await fetch(`http://localhost:5000/leads?access_token=${pageAccessToken}&account_id=${adAccountId}`);
-        const leadData_ = await response.json();
-        console.log(leadData_);
-        setLeadData(leadData_);
-        
-    }
-
     useEffect(() => {
+        async function fetchLeads(pageAccessToken, adAccountId) {
+            const response = await fetch(`http://localhost:5000/leads?access_token=${pageAccessToken}&account_id=${adAccountId}`);
+            const leadData_ = await response.json();
+            console.log(leadData_);
+            setLeadData(leadData_);
+
+            setElRefs(__ => (
+                Array(leadData_.length).fill().map((_, i) => elRefs[i] || createRef())
+            )) 
+        }
+        
         function getLeads(adAccountData) {
             window.FB.api(`${adAccountData.id}/promote_pages?fields=access_token`, function (response) {
                 console.log("getLeads");
@@ -49,11 +51,8 @@ export default function Site(props) {
                     </button>))
             }
         })
-    }, [props.loginResponse.accessToken]);
+    }, [props.loginResponse.accessToken, elRefs]);
 
-    useEffect(()=>{setElRefs(__ => (
-        Array(leadData.length).fill().map((_, i) => elRefs[i] || createRef())
-      ));}, [leadData.length])
 
     function useOutsideAlerter() {
         useEffect(() => {
@@ -83,7 +82,7 @@ export default function Site(props) {
                 // Unbind the event listener on clean up
                 document.removeEventListener("mousedown", handleClickOutside);
             };
-        }, [elRefs, currentRow]);
+        }, []);
     }
 
     async function setRow(rowId) {
