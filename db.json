@@ -10,7 +10,7 @@
       "platform": "fb",
       "source": "BITCOINE",
       "marked": false,
-      "comments": "asd"
+      "comments": "asdasd"
     },
     {
       "id": 2,
@@ -21,7 +21,7 @@
       "phone_number": "0505691",
       "platform": "fb",
       "source": "BITCOINE",
-      "marked": true,
+      "marked": false,
       "comments": ""
     }
   ]

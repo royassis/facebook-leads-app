@@ -1,9 +1,11 @@
 
 import React, { useState, useEffect, createRef} from 'react';
 import { Table } from 'react-bootstrap';
+import Styles from '../App.css';
 
 export default function Site(props) {
 
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
     const [leadData, setLeadData] = useState([]);
     const [accountIds, setAccountIds] = useState("");
     const [thisAccount, setThisAccount] = useState("");
@@ -14,7 +16,7 @@ export default function Site(props) {
 
     useEffect(() => {
         async function fetchLeads(pageAccessToken, adAccountId) {
-            const response = await fetch(`http://localhost:5000/leads?access_token=${pageAccessToken}&account_id=${adAccountId}`);
+            const response = await fetch(`${backendUrl}/leads?access_token=${pageAccessToken}&account_id=${adAccountId}`);
             const leadData_ = await response.json();
             console.log(leadData_);
             setLeadData(leadData_);
@@ -91,9 +93,10 @@ export default function Site(props) {
         let leadData_ = [...leadData];
         let newRow = leadData_.filter(row => row.id === rowId)[0]
         newRow.marked = !newRow.marked;
+        console.log(newRow.marked);
         setLeadData(leadData_);
 
-        await fetch(`http://localhost:5000/leads/${rowId}`, {
+        await fetch(`${backendUrl}/leads/${rowId}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json',
