@@ -131,7 +131,7 @@ export default function Site(props) {
                     </td>
         }
         else {
-            return <td key={eleIdx}>{rowEle[1]}</td>
+            return <td key={eleIdx} className = {"no_selection"}>{rowEle[1]}</td>
         }
     }
 
@@ -139,7 +139,7 @@ export default function Site(props) {
         return <tr
                     key={row.id}
                     onDoubleClick={() => setRow(row.id)}
-                    className={row.marked ? "PlainRow" : "MarkedRow"}
+                    className={row.marked ? "MarkedRow" : "PlainRow"}
                 >
                     {Object.entries(row).filter(rowEle => !keysToFilter.includes(rowEle[0])).map((rowEle, eleIdx) => formatRowEle(rowEle, eleIdx, row.id))}
                 </tr>
