@@ -9,8 +9,8 @@
       "phone_number": "0505691",
       "platform": "fb",
       "source": "BITCOINE",
-      "marked": true,
-      "comments": "asdaasdghh"
+      "marked": false,
+      "comments": "asd"
     },
     {
       "id": 2,
@@ -22,7 +22,7 @@
       "platform": "fb",
       "source": "BITCOINE",
       "marked": true,
-      "comments": "ras"
+      "comments": ""
     }
   ]
 }

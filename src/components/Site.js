@@ -60,9 +60,9 @@ export default function Site(props) {
              * Alert if clicked on outside of element
              */
              async function handleClickOutside(event) {
-                 console.log(event.target.value);
+                 console.log(currentRow);
                 if (currentRow!== -1 && elRefs[currentRow] && !elRefs[currentRow].current.contains(event.target)) {
-                    alert('You clicked outside of me!');
+                    console.log("data saved");
 
                     let newRow = leadData.filter(row => row.id === currentRow+1)[0]
                     await fetch(`http://localhost:5000/leads/${currentRow+1}`, {
@@ -73,16 +73,18 @@ export default function Site(props) {
                         body: JSON.stringify(newRow),
                     })
                     
+                    setCurrentRow(-1);
                 }
-                setCurrentRow(-1);
             }
+
             // Bind the event listener
             document.addEventListener("mousedown", handleClickOutside);
+
             return () => {
                 // Unbind the event listener on clean up
                 document.removeEventListener("mousedown", handleClickOutside);
             };
-        }, []);
+        });
     }
 
     async function setRow(rowId) {
@@ -101,6 +103,7 @@ export default function Site(props) {
     }
 
     async function inputFieldOnChange(e, rowId) {
+        console.log("setCurrentRow ",rowId-1);
         setCurrentRow(rowId-1);
         e.preventDefault();
 
@@ -109,9 +112,6 @@ export default function Site(props) {
    
         newRow.comments = e.target.value
         setLeadData(leadData_);
-
-        console.log(newRow);
-
     }
 
     function formatRowEle(rowEle, eleIdx, rowId) {
