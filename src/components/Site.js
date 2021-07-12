@@ -60,11 +60,22 @@ export default function Site(props) {
             /**
              * Alert if clicked on outside of element
              */
-             function handleClickOutside(event) {
-                 console.log(elRefs.length);
+             async function handleClickOutside(event) {
+                 console.log(event.target.value);
                 if (currentRow!== -1 && elRefs[currentRow] && !elRefs[currentRow].current.contains(event.target)) {
                     alert('You clicked outside of me!');
+
+                    let newRow = leadData.filter(row => row.id === currentRow+1)[0]
+                    await fetch(`http://localhost:5000/leads/${currentRow+1}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-type': 'application/json',
+                        },
+                        body: JSON.stringify(newRow),
+                    })
+                    
                 }
+                setCurrentRow(-1);
             }
             // Bind the event listener
             document.addEventListener("mousedown", handleClickOutside);
@@ -101,14 +112,6 @@ export default function Site(props) {
         setLeadData(leadData_);
 
         console.log(newRow);
-
-        await fetch(`http://localhost:5000/leads/${rowId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify(newRow),
-        })
 
     }
 
