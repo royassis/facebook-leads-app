@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, createRef} from 'react';
 import { Table } from 'react-bootstrap';
-import '../App.css';
 
 export default function Site(props) {
 

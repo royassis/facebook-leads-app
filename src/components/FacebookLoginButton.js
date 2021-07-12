@@ -20,7 +20,7 @@ class FacebookLoginButton extends Component {
       <div 
         className="fb-login-button" 
         data-width="" 
-        data-size="large" 
+        data-size="medium" 
         data-button-type="continue_with" 
         data-layout="default" 
         data-use-continue-as="true"
