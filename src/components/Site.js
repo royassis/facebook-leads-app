@@ -7,9 +7,8 @@ export default function Site(props) {
     const [leadData, setLeadData] = useState([]);
     const [accountIds, setAccountIds] = useState("");
     const [thisAccount, setThisAccount] = useState("");
-    const [currentRow, setCurrentRow] = useState(0);
-    const [elRefs, setElRefs] = useState([]);    
-
+    const [currentRow, setCurrentRow] = useState(-1);
+    const [elRefs, setElRefs] = useState([createRef()]);    
 
     const keysToFilter = ["marked"];
 
@@ -19,6 +18,7 @@ export default function Site(props) {
         const leadData_ = await response.json();
         console.log(leadData_);
         setLeadData(leadData_);
+        
     }
 
     useEffect(() => {
@@ -30,6 +30,7 @@ export default function Site(props) {
                     response.data.map(x => console.log(x.name, x.id))
                     console.log(response.data[0].access_token)
                     fetchLeads(response.data[0].access_token, adAccountData.id)
+                    
                 } else {
                     setLeadData([]);
                 }
@@ -48,20 +49,31 @@ export default function Site(props) {
                     </button>))
             }
         })
+    }, [props.loginResponse.accessToken]);
 
-        setElRefs(__ => (
-            Array(leadData.length).fill().map((_, i) => elRefs[i] || createRef())
-          ));
+    useEffect(()=>{setElRefs(__ => (
+        Array(leadData.length).fill().map((_, i) => elRefs[i] || createRef())
+      ));}, [leadData.length])
 
-        function handleClickOutside(event) {
-            if (elRefs[currentRow] && !elRefs[currentRow].current.contains(event.target)) {
-                alert('You clicked outside of me!');
+    function useOutsideAlerter() {
+        useEffect(() => {
+            /**
+             * Alert if clicked on outside of element
+             */
+             function handleClickOutside(event) {
+                 console.log(elRefs.length);
+                if (currentRow!== -1 && elRefs[currentRow] && !elRefs[currentRow].current.contains(event.target)) {
+                    alert('You clicked outside of me!');
+                }
             }
-        }
-
-        document.addEventListener('mousedown', (e)=>handleClickOutside(e));
-
-    }, [props.loginResponse.accessToken, currentRow]);
+            // Bind the event listener
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                // Unbind the event listener on clean up
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [elRefs, currentRow]);
+    }
 
     async function setRow(rowId) {
         let leadData_ = [...leadData];
@@ -79,6 +91,7 @@ export default function Site(props) {
     }
 
     async function inputFieldOnChange(e, rowId) {
+        setCurrentRow(rowId-1);
         e.preventDefault();
 
         let leadData_ = [...leadData];
@@ -105,11 +118,10 @@ export default function Site(props) {
             return <td key={eleIdx}>
                         <input
                             id ={rowId}
-                            ref={elRefs[eleIdx]}
+                            ref={elRefs[rowId-1]}
                             type="text"
                             value={rowEle[1]}
-                            onClick = {()=>setCurrentRow(eleIdx)}
-                            onChange={(e) => inputFieldOnChange(e, rowId)}>
+                            onChange={(e) => {inputFieldOnChange(e, rowId)}}>
                         </input>
                     </td>
         }
@@ -132,7 +144,7 @@ export default function Site(props) {
         return rows.map((row) => formatRow(row))
     }
 
-
+    useOutsideAlerter();
     return (
 
         <div>
