@@ -45,12 +45,14 @@ export default function Site(props) {
             console.log(response);
             if (response.data) {
                 setAccountIds(response.data.map((adAccountData, i) =>
-                    <button
-                        key={i}
+                <li className="list-group-item" key={i}>
+                    <button 
+                        className ="btn btn-primary"
                         onClick={() => { getLeads(adAccountData); setThisAccount(adAccountData.id) }}
                     >
                         {adAccountData.id}
-                    </button>))
+                    </button>
+                </li>))
             }
         })
     }, [props.loginResponse.accessToken, elRefs, backendUrl]);
@@ -154,7 +156,7 @@ export default function Site(props) {
 
         <div>
             <h1>My accounts</h1>
-            <div>{accountIds}</div>
+            <div><ul className="list-group">{accountIds}</ul></div>
             {thisAccount && <h1>Account {thisAccount} pages</h1>}
             <Table striped bordered hover>
                 <thead>
