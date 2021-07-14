@@ -133,12 +133,14 @@ export default function Site(props) {
                     </td>
         }
         else if (rowEle[0] === "phone_number") {
-            jsxEle= <td key={eleIdx}>
-                <a href={`tel:+${rowEle[1]}`}>{rowEle[1]}</a>
-            </td>
+            jsxEle= <td key={eleIdx} className = {"no_selection"}>
+                        <a href={`tel:+${rowEle[1]}`}>
+                            {rowEle[1]}
+                        </a>
+                    </td>
         }
         else {
-            jsxEle=  <td key={eleIdx} className = {"no_selection"}>{rowEle[1]}</td>
+            jsxEle= <td key={eleIdx} className = {"no_selection"}>{rowEle[1]}</td>
         }
         return jsxEle
     }
