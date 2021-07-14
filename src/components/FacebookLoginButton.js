@@ -9,11 +9,9 @@ class FacebookLoginButton extends Component {
   
   render() {
     this.setLoginResponse = this.props.setLoginResponse.bind(this);
-    window.foo = function (){
-      window.FB.getLoginStatus((authResponse) => {
-        console.log(authResponse);
-        this.setLoginResponse(authResponse)
-      });
+
+    window.foo = function (response){
+      this.setLoginResponse(response);
     }.bind(this);
 
     return (

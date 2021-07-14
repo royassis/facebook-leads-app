@@ -2,6 +2,7 @@ import FacebookLoginButton from './components/FacebookLoginButton'
 import Site from './components/Site'
 import {withRouter,} from "react-router-dom";
 import React, { useState, useEffect } from 'react';
+import { Button } from 'bootstrap';
 
 require('dotenv').config();
 
@@ -11,7 +12,8 @@ function App(props) {
   const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
   const [loginResponse, setLoginResponse] = useState("");
   const [fbSdkStatus, setFbSdkStatus] = useState(0);
-
+  const [logoutStatus, setLogoutStatus] = useState(0);
+  
   (function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) { return; }
@@ -36,6 +38,7 @@ function App(props) {
       console.log(authResponse);
       setLoginResponse(authResponse);
     });
+
   }
 
   return (
