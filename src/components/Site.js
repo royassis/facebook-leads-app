@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, createRef} from 'react';
+import React, { useState, useEffect, createRef} from'react';
 import { Table } from 'react-bootstrap';
 
 export default function Site(props) {
@@ -153,7 +153,7 @@ export default function Site(props) {
     useOutsideAlerter();
     return (
 
-        <div>
+        <div className = "Site">
             <h1>My accounts</h1>
             <div><ul className="list-group">{accountIds}</ul></div>
             {thisAccount && <h1>Account {thisAccount} pages</h1>}

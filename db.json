@@ -9,8 +9,8 @@
       "phone_number": "0505691",
       "platform": "fb",
       "source": "BITCOINE",
-      "marked": true,
-      "comments": "Great lead !asd"
+      "marked": false,
+      "comments": "Shalom ami"
     },
     {
       "id": 2,
@@ -21,8 +21,8 @@
       "phone_number": "0505691",
       "platform": "fb",
       "source": "BITCOINE",
-      "marked": true,
-      "comments": "asdasd"
+      "marked": false,
+      "comments": "asdasds"
     }
   ]
 }

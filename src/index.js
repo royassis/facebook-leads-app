@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter as Router} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
 
 const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
 
@@ -23,7 +23,8 @@ window.fbAsyncInit = function () {
       appId: facebookAppId,
       cookie: true,
       xfbml: true,
-      version: 'v11.0'
+      version: 'v11.0',
+      status: false
   });
   console.log("finished FB.init");
 
