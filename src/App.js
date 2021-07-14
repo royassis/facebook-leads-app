@@ -12,7 +12,6 @@ function App(props) {
   const facebookAppId = process.env.REACT_APP_FACEBOOK_APP_ID;
   const [loginResponse, setLoginResponse] = useState("");
   const [fbSdkStatus, setFbSdkStatus] = useState(0);
-  const [logoutStatus, setLogoutStatus] = useState(0);
   
   (function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
@@ -43,7 +42,7 @@ function App(props) {
 
   return (
       <div className="App">
-        <FacebookLoginButton setLoginResponse={setLoginResponse} fbSdkStatus={fbSdkStatus}/>
+        <FacebookLoginButton setLoginResponse={setLoginResponse} fbSdkStatus={fbSdkStatus} loginResponse={loginResponse}/>
         {loginResponse.status === "connected" && <Site loginResponse={loginResponse} />}
       </div>
   );

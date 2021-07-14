@@ -5,27 +5,35 @@ class FacebookLoginButton extends Component {
   constructor(props) {
     super(props);
     this.state = {};
+    this.loginOnClick = this.loginOnClick.bind(this);
+    this.logoutOnClick = this.logoutOnClick.bind(this);
+  }
+
+  loginOnClick(){
+    window.FB.login(function(response) {
+      this.props.setLoginResponse(response);
+    }.bind(this), {
+        scope: "public_profile,pages_show_list,leads_retrieval,pages_manage_ads,pages_read_engagement,ads_management", 
+        return_scopes: true
+    });
   }
   
+  logoutOnClick(){
+    window.FB.logout(()=>{
+      console.log("loggedout");
+      window.FB.getLoginStatus((authResponse) => {
+        this.props.setLoginResponse(authResponse);
+      });
+    });
+  }
+
   render() {
-    this.setLoginResponse = this.props.setLoginResponse.bind(this);
-
-    window.foo = function (response){
-      this.setLoginResponse(response);
-    }.bind(this);
-
+    
     return (
-      this.props.fbSdkStatus === 1 ? <div 
-        className="fb-login-button" 
-        data-width="" 
-        data-size="medium" 
-        data-button-type="continue_with" 
-        data-layout="default" 
-        data-use-continue-as="true"
-        data-auto-logout-link="true"
-        data-scope="public_profile,pages_show_list,leads_retrieval,pages_manage_ads,pages_read_engagement,ads_management"
-        data-onlogin = "foo">
-      </div> : "Fbsdk loading")
+      this.props.fbSdkStatus === 1 ? 
+        <button onClick = {this.props.loginResponse.status === "connected" ? this.logoutOnClick : this.loginOnClick}>
+          {this.props.loginResponse.status === "connected" ? "logout" : "login"}
+        </button> : "Fbsdk loading")
   }
 }
 
