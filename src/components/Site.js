@@ -120,8 +120,9 @@ export default function Site(props) {
 
     function formatRowEle(rowEle, eleIdx, rowId) {
         eleIdx = parseInt(eleIdx);
+        var jsxEle = null;
         if (rowEle[0] === "comments") {
-            return <td key={eleIdx}>
+            jsxEle= <td key={eleIdx}>
                         <input
                             id ={rowId}
                             ref={elRefs[rowId-1]}
@@ -131,14 +132,15 @@ export default function Site(props) {
                         </input>
                     </td>
         }
-        if (rowEle[0] === "phone_number") {
-            return <td key={eleIdx}>
+        else if (rowEle[0] === "phone_number") {
+            jsxEle= <td key={eleIdx}>
                 <a href={`tel:+${rowEle[1]}`}>{rowEle[1]}</a>
             </td>
         }
         else {
-            return <td key={eleIdx} className = {"no_selection"}>{rowEle[1]}</td>
+            jsxEle=  <td key={eleIdx} className = {"no_selection"}>{rowEle[1]}</td>
         }
+        return jsxEle
     }
 
     function formatRow(row) {
