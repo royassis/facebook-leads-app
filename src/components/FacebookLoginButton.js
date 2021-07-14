@@ -17,7 +17,7 @@ class FacebookLoginButton extends Component {
     }.bind(this);
 
     return (
-      <div 
+      this.props.fbSdkStatus === 1 ? <div 
         className="fb-login-button" 
         data-width="" 
         data-size="medium" 
@@ -27,7 +27,7 @@ class FacebookLoginButton extends Component {
         data-auto-logout-link="true"
         data-scope="public_profile,pages_show_list,leads_retrieval,pages_manage_ads,pages_read_engagement,ads_management"
         data-onlogin = "foo">
-      </div>)
+      </div> : "Fbsdk loading")
   }
 }
 
