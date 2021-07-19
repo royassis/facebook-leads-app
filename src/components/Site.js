@@ -19,7 +19,7 @@ export default function Site(props) {
             const userToken = props.loginResponse.authResponse.accessToken
             console.log(userToken);
             setRefreshFlag(1);
-            await fetch(`/me/leads/refresh?access_token=${userToken}`, {method: 'POST'});
+            // await fetch(`/me/leads/refresh?access_token=${userToken}`, {method: 'POST'});
             setRefreshFlag(0)
             const response = await fetch(`/me/leads?access_token=${userToken}`);
             const leadData_ = await response.json();
@@ -46,7 +46,7 @@ export default function Site(props) {
                 </li>))
             }
         })
-    }, [props.loginResponse.accessToken, elRefs, backendUrl]);
+    }, [elRefs, backendUrl, refreshFlag, props.loginResponse.authResponse.accessToken]);
 
 
     function useOutsideAlerter() {
@@ -99,40 +99,42 @@ export default function Site(props) {
     }
 
     async function inputFieldOnChange(e, eleIdx, lead_id) {
-        console.log("setCurrentRow ",eleIdx);
-        setCurrentRow(eleIdx);
         e.preventDefault();
 
+        setCurrentRow(eleIdx);
+        
         let leadData_ = [...leadData];
-        let newRow = leadData_.filter(row => row.lead_id === lead_id)[0]
+        let newRow = leadData_.filter(row => row.lead_id === lead_id)[0];
    
-        newRow.comments = e.target.value
+        newRow.comments = e.target.value;
+        
         setLeadData(leadData_);
     }
 
-    function formatRowEle(rowEle, eleIdx, lead_id) {
-        eleIdx = parseInt(eleIdx);
+    function formatRowEle(rowEle,eleId, rowId, leadId) {
+        eleId = parseInt(eleId);
         var jsxEle = null;
         if (rowEle[0] === "comments") {
-            jsxEle= <td key={lead_id}>
-                        <input
-            
-                            ref={elRefs[eleIdx]}
+            jsxEle= <td key={leadId+eleId}>
+                        <input  
+                            key = {leadId+eleId+1}
+                            ref={elRefs[rowId]}
                             type="text"
                             value={rowEle[1]}
-                            onChange={(e) => {inputFieldOnChange(e, eleIdx, lead_id)}}>
+                            onChange={(e) => inputFieldOnChange(e, eleId, leadId)}
+                            >
                         </input>
                     </td>
         }
         else if (rowEle[0] === "phone_number") {
-            jsxEle= <td key={lead_id} className = {"no_selection"}>
+            jsxEle= <td  key={leadId+eleId} className = {"no_selection"}>
                         <a href={`tel:+${rowEle[1]}`}>
                             {rowEle[1]}
                         </a>
                     </td>
         }
         else {
-            jsxEle= <td key={lead_id} className = {"no_selection"}>{rowEle[1]}</td>
+            jsxEle= <td  key={eleId+eleId} className = {"no_selection"}>{rowEle[1]}</td>
         }
         return jsxEle
     }
@@ -143,7 +145,7 @@ export default function Site(props) {
                     onDoubleClick={() => setRow(row.lead_id)}
                     className={row.marked ? "MarkedRow" : "PlainRow"}
                 >
-                    {Object.entries(row).filter(rowEle => !keysToFilter.includes(rowEle[0])).map((rowEle) => formatRowEle(rowEle, rowIdx, row.lead_id))}
+                    {Object.entries(row).filter((rowEle) => !keysToFilter.includes(rowEle[0])).map((rowEle, eleId) => formatRowEle(rowEle, eleId, rowIdx, row.lead_id))}
                 </tr>
     }
 
@@ -163,14 +165,14 @@ export default function Site(props) {
                     {leadData.length > 0 &&
                         <tr>
                             {Object.keys(leadData[0]).filter(x => !keysToFilter.includes(x)).map(
-                                (colname, i) => <td key={i}>{colname}</td>
+                                (colname) => <td key={colname}>{colname}</td>
                             )}
                         </tr>}
                 </thead>
                 <tbody>
-                    {leadData.length > 0 && formatRows(leadData)}
+                    {refreshFlag ===0 && leadData.length > 0 && formatRows(leadData)}
                 </tbody>
-
             </Table>
+            <p>{refreshFlag === 1 && "refreshing table ..."}</p>
         </div>)
 }
