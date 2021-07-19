@@ -9,13 +9,19 @@ export default function Site(props) {
     const [accountIds, setAccountIds] = useState("");
     const [thisAccount, setThisAccount] = useState("");
     const [currentRow, setCurrentRow] = useState(-1);
-    const [elRefs, setElRefs] = useState([createRef()]);    
+    const [elRefs, setElRefs] = useState([createRef()]);
+    const [refreshFlag, setRefreshFlag] = useState(0);     
 
     const keysToFilter = ["marked"];
 
     useEffect(() => {
-        async function fetchLeads(pageAccessToken, adAccountId) {
-            const response = await fetch(`${backendUrl}/leads?access_token=${pageAccessToken}&account_id=${adAccountId}`);
+        async function fetchLeads() {
+            const userToken = props.loginResponse.authResponse.accessToken
+            console.log(userToken);
+            setRefreshFlag(1);
+            await fetch(`/me/leads/refresh?access_token=${userToken}`, {method: 'POST'});
+            setRefreshFlag(0)
+            const response = await fetch(`/me/leads?access_token=${userToken}`);
             const leadData_ = await response.json();
             console.log(leadData_);
             setLeadData(leadData_);
@@ -24,21 +30,7 @@ export default function Site(props) {
                 Array(leadData_.length).fill().map((_, i) => elRefs[i] || createRef())
             )) 
         }
-        
-        function getLeads(adAccountData) {
-            window.FB.api(`${adAccountData.id}/promote_pages?fields=access_token`, function (response) {
-                console.log("getLeads");
-                console.log(response)
-                if (response && response.data && response.data[0] && response.data[0].access_token) {
-                    response.data.map(x => console.log(x.name, x.id))
-                    console.log(response.data[0].access_token)
-                    fetchLeads(response.data[0].access_token, adAccountData.id)
-                    
-                } else {
-                    setLeadData([]);
-                }
-            })
-        };
+          
 
         window.FB.api('me/adaccounts', function (response) {
             console.log(response);
@@ -47,7 +39,7 @@ export default function Site(props) {
                 <li className="list-group-item" key={i}>
                     <button 
                         className ="btn btn-primary"
-                        onClick={() => { getLeads(adAccountData); setThisAccount(adAccountData.id) }}
+                        onClick={() => { fetchLeads(); setThisAccount(adAccountData.id) }}
                     >
                         {adAccountData.id}
                     </button>
@@ -67,8 +59,8 @@ export default function Site(props) {
                 if (currentRow!== -1 && elRefs[currentRow] && !elRefs[currentRow].current.contains(event.target)) {
                     console.log("data saved");
 
-                    let newRow = leadData.filter(row => row.id === currentRow+1)[0]
-                    await fetch(`http://localhost:5000/leads/${currentRow+1}`, {
+                    let newRow = leadData.filter((row,i) => i === currentRow)[0]
+                    await fetch(`/me/leads/${newRow.lead_id}`, {
                         method: 'PUT',
                         headers: {
                             'Content-type': 'application/json',
@@ -92,12 +84,12 @@ export default function Site(props) {
 
     async function setRow(rowId) {
         let leadData_ = [...leadData];
-        let newRow = leadData_.filter(row => row.id === rowId)[0]
+        let newRow = leadData_.filter(row => row.lead_id === rowId)[0]
         newRow.marked = !newRow.marked;
-        console.log(newRow.marked);
+        console.log(newRow);
         setLeadData(leadData_);
 
-        await fetch(`${backendUrl}/leads/${rowId}`, {
+        await fetch(`/me/leads/${rowId}`, {
             method: 'PUT',
             headers: {
                 'Content-type': 'application/json',
@@ -106,57 +98,57 @@ export default function Site(props) {
         })
     }
 
-    async function inputFieldOnChange(e, rowId) {
-        console.log("setCurrentRow ",rowId-1);
-        setCurrentRow(rowId-1);
+    async function inputFieldOnChange(e, eleIdx, lead_id) {
+        console.log("setCurrentRow ",eleIdx);
+        setCurrentRow(eleIdx);
         e.preventDefault();
 
         let leadData_ = [...leadData];
-        let newRow = leadData_.filter(row => row.id === rowId)[0]
+        let newRow = leadData_.filter(row => row.lead_id === lead_id)[0]
    
         newRow.comments = e.target.value
         setLeadData(leadData_);
     }
 
-    function formatRowEle(rowEle, eleIdx, rowId) {
+    function formatRowEle(rowEle, eleIdx, lead_id) {
         eleIdx = parseInt(eleIdx);
         var jsxEle = null;
         if (rowEle[0] === "comments") {
-            jsxEle= <td key={eleIdx}>
+            jsxEle= <td key={lead_id}>
                         <input
-                            id ={rowId}
-                            ref={elRefs[rowId-1]}
+            
+                            ref={elRefs[eleIdx]}
                             type="text"
                             value={rowEle[1]}
-                            onChange={(e) => {inputFieldOnChange(e, rowId)}}>
+                            onChange={(e) => {inputFieldOnChange(e, eleIdx, lead_id)}}>
                         </input>
                     </td>
         }
         else if (rowEle[0] === "phone_number") {
-            jsxEle= <td key={eleIdx} className = {"no_selection"}>
+            jsxEle= <td key={lead_id} className = {"no_selection"}>
                         <a href={`tel:+${rowEle[1]}`}>
                             {rowEle[1]}
                         </a>
                     </td>
         }
         else {
-            jsxEle= <td key={eleIdx} className = {"no_selection"}>{rowEle[1]}</td>
+            jsxEle= <td key={lead_id} className = {"no_selection"}>{rowEle[1]}</td>
         }
         return jsxEle
     }
 
-    function formatRow(row) {
+    function formatRow(row, rowIdx) {
         return <tr
-                    key={row.id}
-                    onDoubleClick={() => setRow(row.id)}
+                    key={row.lead_id}
+                    onDoubleClick={() => setRow(row.lead_id)}
                     className={row.marked ? "MarkedRow" : "PlainRow"}
                 >
-                    {Object.entries(row).filter(rowEle => !keysToFilter.includes(rowEle[0])).map((rowEle, eleIdx) => formatRowEle(rowEle, eleIdx, row.id))}
+                    {Object.entries(row).filter(rowEle => !keysToFilter.includes(rowEle[0])).map((rowEle) => formatRowEle(rowEle, rowIdx, row.lead_id))}
                 </tr>
     }
 
     function formatRows(rows) {
-        return rows.map((row) => formatRow(row))
+        return rows.map((row, i) => formatRow(row, i))
     }
 
     useOutsideAlerter();
