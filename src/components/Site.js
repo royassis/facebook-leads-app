@@ -98,10 +98,10 @@ export default function Site(props) {
         })
     }
 
-    async function inputFieldOnChange(e, eleIdx, lead_id) {
+    async function inputFieldOnChange(e, rowId, lead_id) {
         e.preventDefault();
 
-        setCurrentRow(eleIdx);
+        setCurrentRow(rowId);
         
         let leadData_ = [...leadData];
         let newRow = leadData_.filter(row => row.lead_id === lead_id)[0];
@@ -121,7 +121,7 @@ export default function Site(props) {
                             ref={elRefs[rowId]}
                             type="text"
                             value={rowEle[1]}
-                            onChange={(e) => inputFieldOnChange(e, eleId, leadId)}
+                            onChange={(e) => inputFieldOnChange(e, rowId, leadId)}
                             >
                         </input>
                     </td>
