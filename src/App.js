@@ -1,8 +1,7 @@
 import FacebookLoginButton from './components/FacebookLoginButton'
 import Site from './components/Site'
 import {withRouter,} from "react-router-dom";
-import React, { useState, useEffect } from 'react';
-import { Button } from 'bootstrap';
+import React, { useState } from 'react';
 
 require('dotenv').config();
 

@@ -19,7 +19,7 @@ export default function Site(props) {
             const userToken = props.loginResponse.authResponse.accessToken
             console.log(userToken);
             setRefreshFlag(1);
-            // await fetch(`/me/leads/refresh?access_token=${userToken}`, {method: 'POST'});
+            await fetch(`/me/leads/refresh?access_token=${userToken}`, {method: 'POST'});
             setRefreshFlag(0)
             const response = await fetch(`/me/leads?access_token=${userToken}`);
             const leadData_ = await response.json();
